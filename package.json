@@ -11,7 +11,9 @@
     "loader.js"
   ],
   "scripts": {
-    "lint": "eslint src/**/*.{ts,tsx} demo/**/*.tsx",
+    "lint": "npm-run-all --parallel lint:*",
+    "lint:eslint": "eslint src/*.{ts,tsx} src/**/*.{ts,tsx} demo/*.tsx demo/**/*.tsx",
+    "lint:tsc": "tsc --project ./src --noEmit",
     "build": "npm-run-all --parallel build:*",
     "build:lib": "rm -rf ./lib && NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir lib --module es6",
     "build:cjs": "rm -rf ./cjs && NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir cjs --module commonjs",
