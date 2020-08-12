@@ -86,7 +86,7 @@ jobs:
 workflows:
   build-test:
     jobs:
-      - npm_dependencies:
+      - npm_dependencies
       - lint:
           requires:
             - npm_dependencies
