@@ -1,6 +1,6 @@
 {
   "name": "@coralproject/mdx-book",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple mdx documentation generator inspired by docz",
   "module": "./lib/index.js",
   "main": "./cjs/index.js",
