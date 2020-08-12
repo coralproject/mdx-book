@@ -1,0 +1,88 @@
+---
+name: README
+route: "/"
+---
+
+import { Playground } from "@coralproject/mdx-book";
+
+import "./README.css";
+
+# MDX Book
+
+MDX Book is `docz` inspired documentation generator with a playground and without `gatsby` and `ssr`.
+
+## Installation
+
+```bash
+npm install --save-dev @coralproject/mdx-book
+```
+
+## MDX File with playground
+
+```md
+import { Playground } from "@coralproject/mdx-book";
+
+### Playground
+
+<Playground>
+  <div>Hello</div>
+</Playground>
+```
+
+### Playground
+
+<Playground>
+  <div>Hello</div>
+</Playground>
+
+## Entry File
+
+This is an example entry file that your webpack configuration should include:
+
+```js
+// main.js
+import MDXBook from "@coralproject/mdx-book";
+import theme from "prism-react-renderer/themes/nightOwl";
+
+ReactDOM.render(
+  <MDXBook
+    documents={require.context(__dirname, true, /^.*\.mdx$/)}
+    playgroundTheme={theme}
+  />,
+  container
+);
+```
+
+## Webpack Configuration
+
+Just add this rule in your webpack configuration:
+
+```js
+// webppack.config.js
+module.exports = {
+  ...
+  module: {
+    rules: [
+      {
+        test: /\.mdx?$/,
+        use: ["babel-loader", "@coralproject/mdx-book/loader"]
+      }
+    ]
+  }
+};
+```
+
+## Babel Configuration
+
+This is the minimum required babel configuration:
+
+```js
+// babel.config.js
+module.exports = {
+  plugins: ["transform-class-properties"],
+  presets: [
+    "@babel/react",
+    ["@babel/env", { modules: false }]
+  ]
+};
+```

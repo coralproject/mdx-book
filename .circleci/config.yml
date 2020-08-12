@@ -1,0 +1,95 @@
+# job_environment will setup the environment for any job being executed.
+job_environment: &job_environment
+  NODE_ENV: "production"
+
+# job_defaults applies all the defaults for each job.
+job_defaults: &job_defaults
+  working_directory: ~/coralproject/mdx-book
+  docker:
+    - image: circleci/node:12
+  environment:
+    <<: *job_environment
+
+version: 2.1
+jobs:
+  # npm_dependencies will install the dependencies used by all other steps.
+  npm_dependencies:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/coralproject/mdx-book
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package-lock.json
+            # checksum when this file is changed, this key will fail.
+            - v1-dependency-cache-{{ checksum "package-lock.json" }}
+            # Find the most recently generated cache used from any branch
+            - v1-dependency-cache-
+      - run:
+          name: Update NPM
+          command: sudo npm update -g npm
+      # Disabled until there's capabilities to ignore a specific vun. Related:
+      # https://npm.community/t/please-provide-option-to-ignore-packages-in-npm-audit/403/4
+      # https://github.com/npm/cli/pull/10
+      # https://github.com/npm/rfcs/pull/18
+      #
+      #   - run:
+      #       name: Audit dependencies
+      #       command: npm audit
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          key: v1-dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+
+  # lint will perform file linting.
+  lint:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/coralproject/mdx-book
+      - run:
+          name: Lint Source Code
+          command: npm run lint
+
+  # build will build the static assets and server typescript files.
+  build:
+    <<: *job_defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/coralproject/mdx-book
+      - restore_cache:
+          keys:
+            - v1-build-cache-{{ .Branch }}-{{ .Revision }}
+            - v1-build-cache-{{ .Branch }}-
+            - v1-build-cache-
+      - run:
+          name: Build
+          command: npm run build
+      - save_cache:
+          key: v1-build-cache-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ./dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - dist
+workflows:
+  build-test:
+    jobs:
+      - npm_dependencies:
+      - lint:
+          requires:
+            - npm_dependencies
+      - build:
+          requires:
+            - npm_dependencies
