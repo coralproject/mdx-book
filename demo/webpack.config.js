@@ -4,7 +4,7 @@ var TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 var path = require("path");
 
 // This would normally be `@coralproject/mdx-book/loader`.
-const mdxToolsLoader = path.join(__dirname, "../src/loader");
+const mdxToolsLoader = path.join(__dirname, "../loader");
 
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
