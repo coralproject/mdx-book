@@ -1,5 +1,5 @@
 {
-  "name": "mdx-book",
+  "name": "@coralproject/mdx-book",
   "version": "0.0.2",
   "description": "A simple mdx documentation generator inspired by docz",
   "module": "./lib/index.js",
@@ -7,14 +7,15 @@
   "typings": "./lib/index.d.ts",
   "files": [
     "lib",
-    "cjs"
+    "cjs",
+    "loader.js"
   ],
   "scripts": {
     "lint": "eslint src/**/*.{js,ts,tsx} demo/**/*.{js,tsx}",
     "build": "npm-run-all --parallel build:*",
-    "build:lib": "NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir lib --module es6 && cp ./src/loader.js ./lib",
-    "build:cjs": "NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir cjs --module commonjs && cp ./src/loader.js ./cjs",
-    "build:demo": "NODE_ENV=production webpack --config demo/webpack.config.js --context demo/",
+    "build:lib": "rm -rf ./lib && NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir lib --module es6",
+    "build:cjs": "rm -rf ./cjs && NODE_ENV=production tsc --project ./src --declaration --sourceMap --noEmit false --outDir cjs --module commonjs",
+    "build:demo": "rm -rf ./demo/dist && NODE_ENV=production webpack --config demo/webpack.config.js --context demo/",
     "dev": "NODE_ENV=development webpack-dev-server --config demo/webpack.config.js --context demo/",
     "release": "npm version -m '@coralproject/mdx-loader release %s'"
   },
