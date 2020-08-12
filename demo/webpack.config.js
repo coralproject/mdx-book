@@ -8,7 +8,7 @@ const mdxToolsLoader = path.join(__dirname, "../loader");
 
 module.exports = {
   mode: process.env.NODE_ENV === "production" ? "production" : "development",
-  entry: "./main",
+  entry: ["core-js/stable", "regenerator-runtime/runtime", "./main"],
   resolve: {
     extensions: [".js", ".ts", ".tsx"],
     plugins: [
@@ -30,7 +30,13 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(j|t)sx?/,
+        test: /\.tsx?/,
+        use: ["babel-loader"],
+      },
+      {
+        test: /\.js/,
+        include: /node_modules\//,
+        exclude: /node_modules\/(@babel|babel|core-js|regenerator-runtime)/,
         use: ["babel-loader"],
       },
       {
