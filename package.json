@@ -1,6 +1,6 @@
 {
   "name": "mdx-book",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple mdx documentation generator inspired by docz",
   "module": "./lib/index.js",
   "main": "./cjs/index.js",
